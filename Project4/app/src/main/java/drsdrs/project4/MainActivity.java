@@ -7,8 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.Track;
+import kaaes.spotify.webapi.android.models.TracksPager;
 import kaaes.spotify.webapi.android.models.UserPrivate;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
         mAccessToken = getIntent().getStringExtra(SignInActivity.ACCESS_TOKEN_KEY);
 
-        SpotifyApi api = new SpotifyApi();
-
         mJoinButton = (Button) findViewById(R.id.join_playlist);
         mStartNewButton = (Button) findViewById(R.id.new_playlist);
 
@@ -40,14 +46,10 @@ public class MainActivity extends AppCompatActivity {
 // Most (but not all) of the Spotify Web API endpoints require authorisation.
 // If you know you'll only use the ones that don't require authorisation you can skip this step
 
-        api.setAccessToken(mAccessToken);
-
-        SpotifyService spotify = api.getService();
-
-        spotify.getMe(new Callback<UserPrivate>() {
+        SpotifySingleton.getInstance().getSpotifyService().getMe(new Callback<UserPrivate>() {
             @Override
             public void success(UserPrivate userPrivate, Response response) {
-                UserSingleton.getInstance().setUserPrivatel(userPrivate);
+                SpotifySingleton.getInstance().setUserPrivatel(userPrivate);
 
                 mJoinButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -69,6 +71,43 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void failure(RetrofitError error) {
                 Log.w(TAG, "getMe:failure: ", error);
+
+            }
+        });
+
+        //TESTING
+
+        SpotifySingleton.getInstance().getSpotifyService().searchTracks("Changes", new Callback<TracksPager>() {
+            @Override
+            public void success(TracksPager tracksPager, Response response) {
+                for (Track track: tracksPager.tracks.items) {
+                    String artists = "";
+                    for (ArtistSimple artist: track.artists) {
+                        artists += artist.name + ", ";
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "failure: ", error );
+
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapShot: dataSnapshot.getChildren()) {
+                    Track track = snapShot.getValue(Track.class);
+                    Log.d(TAG, "onDataChange: " + track.uri);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

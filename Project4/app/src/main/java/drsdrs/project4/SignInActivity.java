@@ -18,15 +18,10 @@ import com.spotify.sdk.android.player.Error;
 import com.spotify.sdk.android.player.PlayerEvent;
 
 
-import drsdrs.project4.onboarding.OnBoardingActivity;
-
-
 public class SignInActivity extends Activity implements
         SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
 
-    // TODO: Replace with your client ID
     private static final String CLIENT_ID = "a2882012f2694315bc10b9dee32ee679";
-    // TODO: Replace with your redirect URI
     private static final String REDIRECT_URI = "https://github.com/davescar";
 
     private Player mPlayer;
@@ -67,7 +62,7 @@ public class SignInActivity extends Activity implements
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
 
                 String accessToken = response.getAccessToken();
-                UserSingleton.getInstance().setAuthToken(accessToken);
+                SpotifySingleton.getInstance().setAccessToken(accessToken);
 
                 Intent intent1 = new Intent(this, MainActivity.class);
                 intent1.putExtra(ACCESS_TOKEN_KEY, accessToken);
@@ -75,22 +70,6 @@ public class SignInActivity extends Activity implements
 
                 finish();
 
-
-
-//                Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
-//                Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
-//                    @Override
-//                    public void onInitialized(SpotifyPlayer spotifyPlayer) {
-//                        mPlayer = spotifyPlayer;
-//                        mPlayer.addConnectionStateCallback(SignInActivity.this);
-//                        mPlayer.addNotificationCallback(SignInActivity.this);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable throwable) {
-//                        Log.e("SignInActivity", "Could not initialize player: " + throwable.getMessage());
-//                    }
-//                });
 
             }
         }

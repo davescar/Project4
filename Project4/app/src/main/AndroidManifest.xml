@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".NewPlaylistActivity">
         </activity>
+        <activity android:name=".JoinPlaylistActivity">
+        </activity>
     </application>
 
 </manifest>
