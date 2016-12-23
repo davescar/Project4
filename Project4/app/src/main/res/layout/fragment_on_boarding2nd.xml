@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="drsdrs.project4.onboarding.OnBoarding2ndFragment">
+
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Here's How to use ASDF..."/>
+
+    <Button
+        android:id="@+id/first_confirm_button"
+        android:layout_below="@id/instructions"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Got it. Ready to use"/>
+
+
+</RelativeLayout>
